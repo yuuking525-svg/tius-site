@@ -120,32 +120,14 @@
     });
   }
 
+  // A gentle fade-up: callers may ask for more travel, but it is capped so nothing jumps
   function scrollReveal(targets, from = { y: 24 }, stagger = 0.1) {
     if (reduced) return;
     const els = gsap.utils.toArray(targets);
     if (!els.length) return;
-    gsap.fromTo(els, Object.assign({ opacity: 0 }, from), {
-      opacity: 1, x: 0, y: 0, scale: 1, rotationX: 0, duration: 1.3, ease: 'power2.out', stagger,
+    gsap.fromTo(els, { opacity: 0, y: Math.min(from.y || 0, 24) }, {
+      opacity: 1, y: 0, duration: 1.1, ease: 'power2.out', stagger,
       scrollTrigger: { trigger: els[0], start: 'top 88%', toggleActions: 'play none none reverse' },
-    });
-  }
-
-  // Letters flick through random glyphs before they settle
-  const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  function scramble(el, duration = 1.4) {
-    const final = el.dataset.text || (el.dataset.text = el.textContent);
-    const p = { v: 0 };
-    return gsap.to(p, {
-      v: 1, duration, ease: 'none',
-      onUpdate() {
-        let out = '';
-        for (let i = 0; i < final.length; i++) {
-          const t = p.v * (final.length + 5) - i;
-          out += final[i] === ' ' ? ' ' : t >= 5 ? final[i] : t > 0 ? GLYPHS[(Math.random() * GLYPHS.length) | 0] : ' ';
-        }
-        el.textContent = out;
-      },
-      onComplete() { el.textContent = final; },
     });
   }
 
@@ -184,19 +166,10 @@
     return chars;
   }
 
-  function bigWord(section) {
-    const word = $('.bigword', section);
-    if (!word || reduced) return;
-    gsap.fromTo(word, { xPercent: 6 }, {
-      xPercent: -16, ease: 'none',
-      scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: true },
-    });
-  }
-
   function focusIn(targets, trigger, stagger = 0.15, start = 'top 82%') {
     if (reduced) return;
-    gsap.fromTo(targets, { opacity: 0, y: 26, filter: 'blur(10px)' }, {
-      opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.2, ease: 'power3.out', stagger, clearProps: 'filter',
+    gsap.fromTo(targets, { opacity: 0, y: 18 }, {
+      opacity: 1, y: 0, duration: 1, ease: 'power2.out', stagger,
       scrollTrigger: { trigger, start, toggleActions: 'play none none reverse' },
     });
   }
@@ -204,7 +177,8 @@
   /* ---------- The 3D mark's path through the page ---------- */
   // x / y are fractions of the half viewport
   const KEYS = {
-    hero:      { x: 0,     y: 0.02,  scale: 0.72, rotX: 0,    rotY: 0,    burst: 0,    blur: 0,  spin: 0 },
+    // Hidden over the hero: the title and the album photos own the first screen
+    hero:      { x: 0.6,   y: 0.1,   scale: 0,    rotX: 0,    rotY: 0,    burst: 0,    blur: 3,  spin: 0 },
     intro:     { x: 0.52,  y: 0.06,  scale: 1.0,  rotX: 0.3,  rotY: -0.6, burst: 0.25, blur: 5,  spin: 0.8 },
     vision:    { x: 0.5,   y: -0.08, scale: 0.85, rotX: -0.1, rotY: 0.55, burst: 0.4,  blur: 0,  spin: 1.6 },
     service:   { x: 0,     y: 0,     scale: 1.1,  rotX: 0,    rotY: 0,    burst: 0.6,  blur: 8,  spin: 2.4 },
@@ -217,9 +191,9 @@
     company:   { x: 0,     y: 0,     scale: 1.1,  rotX: 0,    rotY: 0,    burst: 0.3,  blur: 10, spin: 6 },
     contact:   { x: 0,     y: 0.05,  scale: 0.95, rotX: 0,    rotY: 0,    burst: 0.2,  blur: 10, spin: 6.6 },
   };
-  // On phones the mark stays centred, high and soft, behind the copy
+  // On phones the mark stays centred, high and soft, behind the copy (and hidden over the hero)
   const MOBILE_KEYS = {
-    hero:     { y: 0.2, scale: 0.85 },
+    hero:     { x: 0, y: 0.35, scale: 0 },
     intro:    { x: 0, y: 0.35, blur: 6 },
     vision:   { x: 0, y: 0.3, scale: 0.9, blur: 5 },
     strength: { x: 0, y: 0.35, scale: 0.9, blur: 5 },
@@ -241,8 +215,6 @@
     markSteps.push({ from, to, st: ScrollTrigger.create({ trigger, start, end }) });
   }
   const easeInOut = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
-  const heroIntro = { frame: reduced ? 1 : 0 };
-  let heroST = null;
 
   function updateMark() {
     let step = null;
@@ -259,19 +231,16 @@
     }
     const follow = reduced ? 1 : 1 - Math.exp(-gsap.ticker.deltaRatio() * 0.09);
     for (const p of MARK_PROPS) scene.state[p] += (target[p] - scene.state[p]) * follow;
-    const out = heroST ? heroST.progress : 0;
-    scene.state.frameExpand = reduced ? 0 : out;
-    scene.state.frame = heroIntro.frame * (reduced ? (out > 0.6 ? 0 : 1) : 1 - out);
   }
 
   /* ---------- Sections (in page order, so pin spacing is measured correctly) ---------- */
-  function initHero() {
-    heroST = ScrollTrigger.create({ trigger: '.hero', start: 'top top', end: 'bottom top' });
+  // The snapshots in the photo band settle in one after another
+  function initPhotoBand() {
     if (reduced) return;
-    const st = { trigger: '.hero', start: 'top top', end: 'bottom 30%', scrub: true };
-    gsap.to('.hero__copy', { y: -30, opacity: 0, ease: 'none', scrollTrigger: st });
-    gsap.to('.hero__en', { yPercent: -30, opacity: 0, ease: 'none', scrollTrigger: st });
-    gsap.to('.hero__scroll', { opacity: 0, ease: 'none', scrollTrigger: Object.assign({}, st, { end: '20% top' }) });
+    gsap.fromTo($$('.band-photo'), { opacity: 0, y: 24 }, {
+      opacity: 1, y: 0, duration: 0.9, ease: 'power2.out', stagger: 0.08,
+      scrollTrigger: { trigger: '.photoband', start: 'top 90%', toggleActions: 'play none none reverse' },
+    });
   }
 
   function initIntro() {
@@ -282,19 +251,9 @@
     if (reduced) { marked.classList.add('is-marked'); return; }
     ScrollTrigger.create({ trigger: marked, start: 'top 75%', onEnter: () => marked.classList.add('is-marked') });
 
-    // Outline copies drift apart from the headline as you scroll past
-    const echo = $('.echo', section);
-    const ghosts = $$('.echo__line--ghost', echo);
-    gsap.fromTo($('.echo__line', echo), { clipPath: 'inset(0% 100% 0% 0%)' }, {
-      clipPath: 'inset(0% 0% 0% 0%)', duration: 1.4, ease: 'expo.inOut',
-      scrollTrigger: { trigger: echo, start: 'top 80%', toggleActions: 'play none none reverse' },
-    });
-    gsap.fromTo(ghosts, { yPercent: 0, opacity: 0 }, {
-      yPercent: (i) => (i + 1) * 6, opacity: (i) => 0.9 - i * 0.2, ease: 'none',
-      scrollTrigger: { trigger: echo, start: 'top 60%', end: 'bottom top', scrub: 1 },
-    });
+    scrollReveal($('.head', section), { y: 14 });
     gsap.fromTo($$('.intro__lead .ch__in', section), { yPercent: 110 }, {
-      yPercent: 0, duration: 1, ease: 'expo.out', stagger: 0.012,
+      yPercent: 0, duration: 1, ease: 'power3.out', stagger: 0.012,
       scrollTrigger: { trigger: '.intro__lead', start: 'top 80%', toggleActions: 'play none none reverse' },
     });
     scrollReveal($$('.intro__text [data-reveal]', section), { y: 40 }, 0.15);
@@ -306,7 +265,6 @@
     scrollReveal($('.head', section), { y: 30 });
     scrollSplit($('.vision__title', section), 0.025);
     gradientChars($('.vision__title', section));
-    bigWord(section);
 
     // Dial: sixty ticks, four coloured arcs that fill like a clock
     const NS = 'http://www.w3.org/2000/svg';
@@ -350,12 +308,9 @@
     }
 
     const voices = $$('.voices li', section);
-    gsap.fromTo(voices, { opacity: 0, y: 30, scale: 0.85, filter: 'blur(8px)' }, {
-      opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 1, ease: 'back.out(1.6)', stagger: 0.18, clearProps: 'filter',
+    gsap.fromTo(voices, { opacity: 0, y: 16 }, {
+      opacity: 1, y: 0, duration: 0.9, ease: 'power2.out', stagger: 0.14,
       scrollTrigger: { trigger: '.voices', start: 'top 85%', toggleActions: 'play none none reverse' },
-    });
-    voices.forEach((v, i) => {
-      gsap.to(v, { x: i % 2 ? -8 : 8, duration: 2.6 + i * 0.5, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: i * 0.4 });
     });
 
     // The words fill with ink as you read, the line beside them grows, each dot lights in turn
@@ -372,14 +327,14 @@
         .call(() => items[i].classList.remove('is-active'), null, at);
       at += chars.length * 0.25;
     });
-    gsap.fromTo(items, { opacity: 0, x: 24 }, {
-      opacity: 1, x: 0, duration: 1, ease: 'power3.out', stagger: 0.12,
+    gsap.fromTo(items, { opacity: 0, x: 12 }, {
+      opacity: 1, x: 0, duration: 0.9, ease: 'power2.out', stagger: 0.1,
       scrollTrigger: { trigger: story, start: 'top 85%', toggleActions: 'play none none reverse' },
     });
 
     const cycle = $('.cycle', section);
     new IntersectionObserver(([e]) => cycle.classList.toggle('is-playing', e.isIntersecting)).observe(cycle);
-    scrollReveal(cycle, { y: 50, scale: 0.97 });
+    scrollReveal(cycle, { y: 24 });
     setCycle(0);
     const dial = { p: 0 };
     gsap.to(dial, {
@@ -393,33 +348,11 @@
   function initService() {
     const section = $('#service');
     markTween('vision', 'service', section, 'top bottom', 'top 40%');
-    const panel = $('.panel', section);
     scrollSplit($('.feature__title', section), 0.03);
-    bigWord(section);
-
-    // Cards flood with their own colour from the pointer; on touch screens a tap does it
-    const cards = $$('.svc, .feature', section);
-    const aim = (card, e) => {
-      const r = card.getBoundingClientRect();
-      card.style.setProperty('--mx', `${e.clientX - r.left}px`);
-      card.style.setProperty('--my', `${e.clientY - r.top}px`);
-    };
-    cards.forEach((card) => {
-      card.addEventListener('pointerenter', (e) => aim(card, e));
-      card.addEventListener('pointermove', (e) => aim(card, e));
-      card.addEventListener('click', (e) => {
-        if (matchMedia('(hover: hover)').matches) return;
-        aim(card, e);
-        const on = !card.classList.contains('is-active');
-        cards.forEach((c) => c.classList.remove('is-active'));
-        card.classList.toggle('is-active', on);
-      });
-    });
     if (reduced) return;
 
-    gsap.fromTo(panel, { scale: 0.93 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: panel, start: 'top bottom', end: 'top 10%', scrub: true } });
-    scrollReveal($('.head', section), { y: 30 });
-    scrollReveal($$('[data-reveal]', section), { y: 30 }, 0.1);
+    scrollReveal($('.head', section), { y: 20 });
+    scrollReveal($$('[data-reveal]', section), { y: 20 }, 0.1);
 
     // The four steps of the flow light up one after another
     const steps = $$('.chain li', section);
@@ -435,18 +368,13 @@
     });
     steps.slice(0, -1).forEach((li) => chain.to(li, { '--fill': '100%', ease: 'none' }));
 
-    gsap.fromTo($$('.checks li', section), { opacity: 0, x: 30 }, {
-      opacity: 1, x: 0, duration: 0.8, ease: 'power3.out', stagger: 0.07,
+    gsap.fromTo($$('.checks li', section), { opacity: 0, x: 14 }, {
+      opacity: 1, x: 0, duration: 0.8, ease: 'power2.out', stagger: 0.06,
       scrollTrigger: { trigger: '.checks', start: 'top 80%', toggleActions: 'play none none reverse' },
     });
-    // Little scenes only play while on screen
-    const playing = new IntersectionObserver((entries) => {
-      entries.forEach((e) => e.target.classList.toggle('is-playing', e.isIntersecting));
-    });
-    $$('.svc, .phone', section).forEach((el) => playing.observe(el));
-
-    gsap.fromTo($$('.svc', section), { opacity: 0, y: 40, rotationX: -10, transformOrigin: '50% 100%' }, {
-      opacity: 1, y: 0, rotationX: 0, duration: 1.1, ease: 'power3.out', stagger: 0.12,
+    // The photo cards are laid in one after another; transforms are cleared so the hover tilt still works
+    gsap.fromTo($$('.svc', section), { opacity: 0, y: 24 }, {
+      opacity: 1, y: 0, duration: 1, ease: 'power2.out', stagger: 0.12, clearProps: 'transform',
       scrollTrigger: { trigger: '.services', start: 'top 85%', toggleActions: 'play none none reverse' },
     });
   }
@@ -457,13 +385,9 @@
     if (reduced) return;
     scrollReveal($('.head', section), { y: 30 });
     $$('.strength__item', section).forEach((item) => {
-      gsap.fromTo(item, { opacity: 0, y: 50, rotationX: -6, transformPerspective: 1000 }, {
-        opacity: 1, y: 0, rotationX: 0, ease: 'power2.out',
-        scrollTrigger: { trigger: item, start: 'top 95%', end: 'top 60%', scrub: 1 },
-      });
-      gsap.fromTo($('.strength__no', item), { yPercent: 30 }, {
-        yPercent: -10, ease: 'none',
-        scrollTrigger: { trigger: item, start: 'top bottom', end: 'bottom top', scrub: true },
+      gsap.fromTo(item, { opacity: 0, y: 24 }, {
+        opacity: 1, y: 0, ease: 'power2.out',
+        scrollTrigger: { trigger: item, start: 'top 95%', end: 'top 65%', scrub: 1 },
       });
     });
   }
@@ -724,19 +648,15 @@
     if (reduced) return;
     const [l1, l2] = $$('.statement__line', section);
     const st = { trigger: section, start: 'top 85%', end: 'center 45%', scrub: 1 };
-    gsap.fromTo(l1, { clipPath: 'inset(0% 100% 0% 0%)', x: -24 }, { clipPath: 'inset(0% 0% 0% 0%)', x: 0, ease: 'none', scrollTrigger: st });
-    gsap.fromTo(l2, { clipPath: 'inset(0% 0% 0% 100%)', x: 24 }, { clipPath: 'inset(0% 0% 0% 0%)', x: 0, ease: 'none', scrollTrigger: st });
-    gsap.fromTo($('i', l1), { scaleX: 0, transformOrigin: 'left' }, { scaleX: 1, ease: 'none', scrollTrigger: st });
+    gsap.fromTo([l1, l2], { opacity: 0, y: 16 }, { opacity: 1, y: 0, ease: 'none', stagger: 0.15, scrollTrigger: st });
   }
 
   function initCompany() {
     const section = $('#company');
     markTween('statement', 'company', section);
     if (reduced) return;
-    const panel = $('.panel', section);
-    gsap.fromTo(panel, { scale: 0.93 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: panel, start: 'top bottom', end: 'top 15%', scrub: true } });
-    scrollReveal([$('.head', section), $('.company__logo', section)], { y: 30 }, 0.15);
-    scrollReveal($$('.company__row', section), { y: 30 }, 0.08);
+    scrollReveal([$('.head', section), $('.company__logo', section)], { y: 20 }, 0.15);
+    scrollReveal($$('.company__row', section), { y: 20 }, 0.08);
   }
 
   function initContact() {
@@ -744,9 +664,9 @@
     markTween('company', 'contact', section);
     scrollSplit($('.contact__title', section), 0.03);
     if (reduced) return;
-    scrollReveal($('.contact__card', section), { y: 40, scale: 0.98 });
-    gsap.fromTo($$('.worries li', section), { opacity: 0, y: 24, scale: 0.85 }, {
-      opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'back.out(2)', stagger: 0.12,
+    scrollReveal($('.contact__card', section), { y: 24 });
+    gsap.fromTo($$('.worries li', section), { opacity: 0, y: 14 }, {
+      opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', stagger: 0.1,
       scrollTrigger: { trigger: '.worries', start: 'top 88%', toggleActions: 'play none none reverse' },
     });
     scrollReveal([$('.contact__text', section), $('.ig-card', section)], { y: 30 }, 0.12);
@@ -827,7 +747,7 @@
   // With a mouse or trackpad, scrolling down settles at the top of each part before moving on
   function initSectionStops() {
     if (!lenis || !matchMedia('(pointer: fine)').matches) return;
-    const parts = $$('main > section, main > .pin-spacer > section').filter((s) => !s.hidden && s.id !== 'top');
+    const parts = $$('main > section, main > .pin-spacer > section').filter((s) => !s.hidden && s.id !== 'top' && !s.classList.contains('photoband'));
     let stops = [];
     const HEADING_Y = 120;
     const docTop = (el) => { let y = 0; for (let n = el; n; n = n.offsetParent) y += n.offsetTop; return y; };
@@ -836,7 +756,7 @@
         const spacer = s.parentElement.classList.contains('pin-spacer') ? s.parentElement : null;
         if (spacer) return Math.round(spacer.getBoundingClientRect().top + scrollY);
         if (s.querySelector(':scope > .panel')) return docTop(s);
-        const heading = s.querySelector('.strength__grid, .head__en, .echo, .statement__line');
+        const heading = s.querySelector('.strength__grid, .head__sticker, .statement__line');
         return heading ? Math.max(docTop(s), docTop(heading) - HEADING_Y) : docTop(s);
       }).sort((a, b) => a - b);
     };
@@ -870,16 +790,7 @@
   }
 
   /* ---------- Opening ---------- */
-  // The letters of 「ワクワク」 hop one after another, again every few seconds
-  function hopLetters() {
-    const chars = $$('.hero__title em .ch__in');
-    if (!chars.length) return;
-    const lift = () => -parseFloat(getComputedStyle(chars[0]).fontSize) * 0.22;
-    gsap.timeline({ repeat: -1, repeatDelay: 5 })
-      .to(chars, { y: lift, duration: 0.26, ease: 'power2.out', stagger: 0.08 })
-      .to(chars, { y: 0, duration: 0.6, ease: 'bounce.out', stagger: 0.08 }, 0.26);
-  }
-
+  // A short opening: the logo fades in, holds for a beat, then the hero text settles in
   async function playIntro() {
     const loader = $('#loader');
     loader.style.animation = 'none';
@@ -888,7 +799,7 @@
     gradientChars(title);
     const sub = $('.hero__sub');
     const heroReveal = $$('[data-hero-reveal]');
-    const scrambles = $$('[data-scramble]');
+    const squiggle = $('.hero__squiggle path');
 
     if (reduced) {
       loader.remove();
@@ -898,81 +809,44 @@
 
     root.classList.add('is-loading');
     if (lenis) lenis.stop();
-    gsap.set(heroChars, { yPercent: 110, rotateX: -75, filter: 'blur(10px)', transformOrigin: '50% 100%', transformPerspective: 600 });
+    gsap.set(heroChars, { yPercent: 100 });
     gsap.set(sub, { '--wipe': 0 });
-    gsap.set(heroReveal, { opacity: 0, y: 24 });
-    scrambles.forEach((el) => {
-      el.dataset.text = el.textContent;
-      el.textContent = el.textContent.replace(/\S/g, ' ');
-    });
+    gsap.set(heroReveal, { opacity: 0, y: 16 });
+    gsap.set(squiggle, { strokeDashoffset: 1 });
 
-    // Weighted loading work; the gauge follows it but takes at least 2.2s so the network can show
-    let loaded = 0;
+    // Wait for fonts, the 3D scene and the page, but never longer than 4s
     const pageLoaded = document.readyState === 'complete' ? Promise.resolve() : new Promise((r) => addEventListener('load', r, { once: true }));
-    [[document.fonts && document.fonts.ready, 0.25], [scene.ready, 0.45], [pageLoaded, 0.3]].forEach(([work, weight]) => {
-      Promise.resolve(work).catch(() => {}).then(() => { loaded += weight; });
+    const ready = Promise.all([document.fonts && document.fonts.ready, scene.ready, pageLoaded].map((p) => Promise.resolve(p).catch(() => {})));
+    const timeout = new Promise((r) => setTimeout(r, 4000));
+
+    // The logo fades in on its own, and stays at least 1.1s in total
+    const logoIn = new Promise((resolve) => {
+      gsap.fromTo('.loader__logo', { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out', onComplete: resolve });
     });
-    setTimeout(() => { loaded = 1; }, 7000);
+    await Promise.all([Promise.race([ready, timeout]), logoIn, new Promise((r) => setTimeout(r, 1100))]);
 
-    const mark = $('.loader__mark', loader);
-    const canvas = $('.loader__canvas', loader);
-    gsap.set(mark, { opacity: 0 });
-    const particles = window.TiusParticles ? await window.TiusParticles.createLoaderParticles(canvas, mark).catch(() => null) : null;
-    let formed = particles ? null : Promise.resolve();
-
-    const pct = $('.loader__pct b', loader);
-    const fill = $('.loader__fill', loader);
-    const startedAt = performance.now();
-    let shown = 0;
-    await new Promise((resolve) => {
-      const tick = () => {
-        const target = Math.min(loaded, (performance.now() - startedAt) / 2200, 1);
-        shown += (target - shown) * (1 - Math.pow(0.9, gsap.ticker.deltaRatio()));
-        if (target >= 0.999 && shown > 0.995) shown = 1;
-        pct.textContent = Math.round(shown * 100);
-        fill.style.transform = `scaleX(${shown})`;
-        if (!particles) mark.style.opacity = shown;
-        if (!formed && (shown > 0.5 || shown === 1)) formed = particles.gather();
-        if (shown === 1) { gsap.ticker.remove(tick); resolve(); }
-      };
-      gsap.ticker.add(tick);
-    });
-    await formed;
-
-    // Gathered: the particles give way to the crisp mark and the wordmark slides in
-    await new Promise((resolve) => {
-      gsap.timeline({ onComplete: resolve })
-        .to(mark, { opacity: 1, duration: 0.45, ease: 'power1.out' })
-        .to(canvas, { opacity: 0, duration: 0.5 }, 0.1)
-        .fromTo($('.loader__type', loader), { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.8, ease: 'expo.inOut' }, 0.1)
-        .to({}, { duration: 0.3 });
-    });
-
-    gsap.timeline({ onComplete: () => { if (particles) particles.stop(); loader.remove(); } })
-      .to('.loader__logo', { y: -30, opacity: 0, duration: 0.5, ease: 'power2.in' })
-      .to('.loader__gauge', { opacity: 0, duration: 0.3 }, 0)
-      .fromTo(loader, { clipPath: 'inset(0% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 100% 0%)', duration: 1.1, ease: 'expo.inOut' }, 0.25)
-      // The dark face settles in while the loader is still lifting, so the cream copy never lands on paper
-      .to(heroIntro, { frame: 1, duration: 0.8, ease: 'power2.out' }, 0.25)
-      .to(scene.state, { intro: 1, duration: 2.2, ease: 'power1.out' }, 0.55)
+    gsap.timeline({ onComplete: () => loader.remove() })
+      .to(loader, { opacity: 0, duration: 0.6, ease: 'power1.inOut' })
+      .to(scene.state, { intro: 1, duration: 2, ease: 'power1.out' }, 0.2)
       .add(() => {
         root.classList.remove('is-loading');
         if (lenis) lenis.start();
         ScrollTrigger.refresh();
-      }, 0.8)
-      .add(() => scrambles.forEach((el, i) => gsap.delayedCall(i * 0.25, () => scramble(el, 1.3))), 0.7)
-      // Line 1 flips up character by character out of a blur
-      .to(heroChars, { yPercent: 0, rotateX: 0, filter: 'blur(0px)', duration: 1.3, ease: 'expo.out', stagger: 0.035, clearProps: 'filter' }, 0.95)
-      // Line 2 is written in behind a glowing scan bar
-      .to(sub, { '--wipe': 1, duration: 1.8, ease: 'power3.inOut' }, 1.55)
-      .fromTo('.hero__scan', { opacity: 0 }, { opacity: 1, duration: 0.2 }, 1.55)
-      .to('.hero__scan', { opacity: 0, duration: 0.45 }, 3.15)
-      .add(() => { title.classList.add('is-revealed'); hopLetters(); }, 2.6)
-      .to(heroReveal, { opacity: 1, y: 0, duration: 1, ease: 'power3.out', stagger: 0.15 }, 1.3);
+      }, 0.4)
+      // Line 1 rises into place character by character
+      .to(heroChars, { yPercent: 0, duration: 0.9, ease: 'power3.out', stagger: 0.025 }, 0.4)
+      // Line 2 is written in from the left
+      .to(sub, { '--wipe': 1, duration: 1.4, ease: 'power2.inOut' }, 0.9)
+      .fromTo('.hero__scan', { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0.9)
+      .to('.hero__scan', { opacity: 0, duration: 0.4 }, 2.1)
+      .add(() => { title.classList.add('is-revealed'); }, 1.6)
+      // The hand-drawn wave runs in under ワクワク once the title has landed
+      .to(squiggle, { strokeDashoffset: 0, duration: 0.9, ease: 'power2.inOut' }, 1.2)
+      .to(heroReveal, { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out', stagger: 0.12 }, 0.8);
   }
 
   Object.assign(scene.state, key('hero'));
-  initHero();
+  initPhotoBand();
   initIntro();
   initVision();
   initService();

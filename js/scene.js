@@ -1,5 +1,5 @@
 /* The Tius mark rebuilt in glass: four journeys round one centre, a ring of small stops between
-   them, floating over a soft moving gradient with the rounded hero frame drawn in the shader.
+   them, floating over a soft warm-white gradient.
    main.js drives `state` from the scroll position; this file only renders it.
    Classic script (no modules) so the page also runs when opened straight from the disk. */
 (function () {
@@ -29,26 +29,16 @@
     uniform float uScroll;
     uniform float uPixelRatio;
     uniform vec2 uViewport;
-    uniform vec4 uInset;
-    uniform float uRadius;
-    uniform float uFrame;
     uniform vec3 uBase;
     uniform vec3 uA;
     uniform vec3 uB;
     uniform vec3 uC;
     uniform vec3 uD;
     uniform vec3 uE;
-    uniform vec3 uNight;
-    uniform vec3 uEmber;
-    uniform vec3 uEdge;
 
     float cloud(vec2 p, vec2 c, float r) {
       vec2 d = (p - c) * vec2(uViewport.x / uViewport.y, 1.0);
       return smoothstep(r, 0.0, length(d));
-    }
-    float box(vec2 p, vec2 b, float r) {
-      vec2 q = abs(p) - b + r;
-      return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
     }
 
     void main() {
@@ -65,23 +55,7 @@
       col = mix(col, uE, cloud(p, vec2(0.1 + cos(t * 1.3) * 0.07, 0.12 + s * 0.28), 0.48) * 0.6);
       // A faint band of light sweeping diagonally, like sun through a plane window
       float band = sin((p.x * 1.4 + p.y) * 3.0 - uTime * 0.25) * 0.5 + 0.5;
-      col += vec3(1.0) * pow(band, 8.0) * 0.035;
-
-      if (uFrame > 0.001) {
-        vec2 lo = vec2(uInset.w, uInset.z);
-        vec2 hi = uViewport - vec2(uInset.y, uInset.x);
-        float d = box(px - (lo + hi) * 0.5, (hi - lo) * 0.5, uRadius);
-        float inside = smoothstep(1.0, -1.0, d);
-        float shadow = smoothstep(60.0, 0.0, d) * (1.0 - inside) * 0.07;
-        col = mix(col, col * 0.86, shadow * uFrame);
-        // Inside the frame: a near-black cocoa face with two slow ember glows and the faint light band
-        float glow = cloud(p, vec2(0.8 + sin(t) * 0.06, 0.8 + cos(t * 0.9) * 0.05), 0.7);
-        float glow2 = cloud(p, vec2(0.14 + cos(t * 1.1) * 0.05, 0.12 + sin(t * 1.2) * 0.05), 0.5);
-        vec3 face = mix(uNight, uEmber, min(glow * 0.85 + glow2 * 0.4, 1.0));
-        face += uEdge * pow(band, 10.0) * 0.025;
-        col = mix(col, face, inside * uFrame);
-        col = mix(col, uEdge, smoothstep(1.5, 0.0, abs(d)) * 0.3 * uFrame);
-      }
+      col += vec3(1.0) * pow(band, 8.0) * 0.02;
       gl_FragColor = vec4(col, 1.0);
       #include <encodings_fragment>
     }
@@ -109,7 +83,7 @@
 
   function createScene(canvas, opts) {
     const reduced = Boolean(opts && opts.reduced);
-    const state = { x: 0, y: 0, scale: 0.8, rotX: 0, rotY: 0, burst: 0, blur: 0, spin: 0, intro: reduced ? 1 : 0, frame: 1, frameExpand: 0, scroll: 0 };
+    const state = { x: 0, y: 0, scale: 0.8, rotX: 0, rotY: 0, burst: 0, blur: 0, spin: 0, intro: reduced ? 1 : 0, scroll: 0 };
     const mouse = { x: 0, y: 0, sx: 0, sy: 0 };
     const THREE = window.THREE;
     const fallback = { state, ready: Promise.resolve(), view: { halfW: 1, halfH: 1 }, setMouse() {}, setPaused() {} };
@@ -147,20 +121,13 @@
       uScroll: { value: 0 },
       uPixelRatio: { value: 1 },
       uViewport: { value: new THREE.Vector2(1, 1) },
-      uInset: { value: new THREE.Vector4() },
-      uRadius: { value: 36 },
-      uFrame: { value: 1 },
-      // Kraft paper with soft sand, terracotta and pink-beige clouds
-      uBase: { value: new THREE.Color('#f3ead9') },
-      uA: { value: new THREE.Color('#ead6b8') },
-      uB: { value: new THREE.Color('#d9a080') },
-      uC: { value: new THREE.Color('#f0d0bd') },
-      uD: { value: new THREE.Color('#f8efdd') },
-      uE: { value: new THREE.Color('#dcc4a4') },
-      // The hero's dark face
-      uNight: { value: new THREE.Color('#1f140e') },
-      uEmber: { value: new THREE.Color('#3d2619') },
-      uEdge: { value: new THREE.Color('#e3a084') },
+      // Warm white with the faintest écru and blush clouds
+      uBase: { value: new THREE.Color('#fdfcf9') },
+      uA: { value: new THREE.Color('#faf6f0') },
+      uB: { value: new THREE.Color('#f8ece2') },
+      uC: { value: new THREE.Color('#fbf1e9') },
+      uD: { value: new THREE.Color('#ffffff') },
+      uE: { value: new THREE.Color('#f8f1e7') },
     };
     const bg = new THREE.Mesh(
       new THREE.PlaneGeometry(1, 1),
@@ -220,7 +187,6 @@
       bg.scale.set(bgH * camera.aspect, bgH, 1);
       bgUniforms.uPixelRatio.value = dpr;
       bgUniforms.uViewport.value.set(w, h);
-      bgUniforms.uRadius.value = view.mobile ? 24 : 36;
     }
     resize();
     addEventListener('resize', resize);
@@ -232,19 +198,12 @@
     let lastBlur = -1;
     let paused = false;
 
-    function frameInset() {
-      const k = 1 - state.frameExpand;
-      return view.mobile ? [76 * k, 12 * k, 16 * k, 12 * k] : [76 * k, 64 * k, 56 * k, 64 * k];
-    }
-
     function render() {
       if (paused) return;
       const dt = Math.min(clock.getDelta(), 0.05);
       if (!reduced) time += dt;
       bgUniforms.uTime.value = time;
       bgUniforms.uScroll.value = state.scroll;
-      bgUniforms.uFrame.value = state.frame;
-      bgUniforms.uInset.value.set(...frameInset());
 
       // The small stops travel round the orbit as the mark opens up
       const turn = state.burst * 0.7 + time * 0.08;
