@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>株式会社ティウス｜旅と発信の力で、人生にワクワクを。</title>
   <meta name="description" content="株式会社ティウスは、Instagram・SNS・コミュニティ・教育を活用し、旅の魅力と人の可能性を広げる事業を行っています。旅行系Instagram「ぴち家」、旅行マイル特化コミュニティ「MIRAIRO」、講座・AI顧問まで。">
-  <meta name="theme-color" content="#f3ead9">
+  <meta name="theme-color" content="#fdfcf9">
   <meta name="robots" content="noindex">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="株式会社ティウス">
@@ -66,21 +66,15 @@
     </symbol>
   </svg>
 
-  <!-- Opening: a network of nodes breaks apart and gathers into the mark -->
+  <!-- Opening: the logo fades in, then the page shows -->
   <div class="loader" id="loader" aria-hidden="true">
-    <canvas class="loader__canvas"></canvas>
     <div class="loader__logo">
       <svg class="loader__mark" viewBox="0 0 100 100"><use href="#logo-mark"/></svg>
       <p class="loader__type">Tius<small>株式会社ティウス</small></p>
     </div>
-    <div class="loader__gauge">
-      <span class="loader__track"><i class="loader__fill"></i></span>
-      <span class="loader__pct"><b>0</b>%</span>
-    </div>
   </div>
 
   <canvas class="webgl" id="webgl" aria-hidden="true"></canvas>
-  <div class="grain" aria-hidden="true"></div>
   <a class="motion-toggle" href="?motion=on" hidden>端末の「視差効果を減らす」設定のため、動きを止めています。<b>アニメーションを表示する →</b></a>
 
   <header class="header">
@@ -121,39 +115,42 @@
 
   <main>
     <!-- HERO -->
+    <!-- The title sits in the middle like the first page of an album; the photos are taped in underneath -->
     <section class="hero" id="top">
-      <p class="hero__en" aria-hidden="true"><span data-scramble>Bring Excitement</span><span data-scramble>to Your Life</span></p>
+      <span class="blob blob--1" aria-hidden="true"></span>
+      <span class="blob blob--2" aria-hidden="true"></span>
+      <span class="blob blob--3" aria-hidden="true"></span>
       <div class="hero__copy">
-        <!-- Three polaroids taped together; the front one sits higher so no photo ever covers a caption -->
-        <div class="hero__photos" data-hero-reveal>
-          <figure class="polaroid polaroid--a"><img src="assets/photos/hotel-europe.jpg" alt="夜の運河沿いに灯りがともる洋館のホテル" width="2000" height="1148" decoding="async"><figcaption>夜の水辺で</figcaption></figure>
-          <figure class="polaroid polaroid--c"><img src="assets/photos/villa-santorini.jpg" alt="白い壁と青いドーム屋根の建物" width="1920" height="1080" decoding="async"><figcaption>白い壁と青い屋根</figcaption></figure>
-          <figure class="polaroid polaroid--b"><img src="assets/photos/suginoi.jpg" alt="街を見下ろす高台のプール" width="1940" height="920" decoding="async"><figcaption>空に近いプール</figcaption></figure>
-        </div>
         <h1 class="hero__title" data-split>
-          <span class="line"><span class="phrase">旅と発信の力で、</span><span class="phrase">人生に<em>ワクワク</em>を。</span></span>
+          <span class="line"><span class="phrase">旅と発信の力で、</span></span>
+          <span class="line"><span class="phrase">人生に<em>ワクワク<svg class="hero__squiggle" viewBox="0 0 200 24" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 14C18 4 30 4 42 13s24 9 38 0 26-9 38 0 24 9 38 0 22-8 40 1"/></svg></em>を。</span></span>
         </h1>
         <p class="hero__sub"><span class="hero__sub-text"><span class="phrase">好きなときに、</span><span class="phrase">好きな場所で、</span><span class="phrase">好きな人と、</span><span class="phrase">好きなことをする。</span><br><span class="phrase">そんな毎日を、</span><span class="phrase">発信とコミュニティの力で</span><span class="phrase">広げていきます。</span></span><i class="hero__scan" aria-hidden="true"></i></p>
       </div>
-      <p class="hero__side" aria-hidden="true">Tius Inc. — Aichi, Japan</p>
-      <a href="#intro" class="hero__scroll" data-hero-reveal aria-label="下へスクロール">
-        <svg class="hero__scroll-ring" viewBox="0 0 100 100" aria-hidden="true">
-          <defs><path id="scrollRing" d="M50 50m-38 0a38 38 0 1 1 76 0a38 38 0 1 1-76 0"/></defs>
-          <text><textPath href="#scrollRing" textLength="236">SCROLL DOWN · SCROLL DOWN · </textPath></text>
-        </svg>
-        <i class="hero__scroll-arrow"></i>
-      </a>
+      <div class="hero__album" data-hero-reveal>
+        <figure class="album-side album-side--l"><img src="assets/photos-v4/beach-shadow.jpg" alt="砂浜に映る二人の影" width="1200" height="1600" decoding="async"><figcaption>海辺で、影のピース</figcaption></figure>
+        <figure class="album-main"><img src="assets/photos-v5/ocean-family.jpg" alt="おそろいのシャツで海を眺める家族の後ろ姿" width="1080" height="1350" decoding="async" fetchpriority="high"></figure>
+        <figure class="album-side album-side--r"><img src="assets/photos-v4/window-backs.jpg" alt="宿の窓辺に並んで座る二人の後ろ姿" width="1179" height="1885" decoding="async"><figcaption>窓辺で並んで、ピース</figcaption></figure>
+      </div>
     </section>
+
+    <!-- PHOTO BAND: a row of taped-in snapshots; swipe sideways on phones -->
+    <section class="photoband" aria-label="旅先の写真">
+      <ul class="photoband__list" tabindex="0">
+        <li class="band-photo"><img src="assets/photos/hotel-europe.jpg" alt="運河の両岸に灯りがともる夕暮れのホテル" width="1920" height="1102" loading="lazy" decoding="async"><span>運河に灯りがともる夜</span></li>
+        <li class="band-photo"><img src="assets/photos/villa-santorini.jpg" alt="白い壁と青い扉、青いドーム屋根の建物" width="1920" height="1080" loading="lazy" decoding="async"><span>白い壁と、青い扉</span></li>
+        <li class="band-photo"><img src="assets/photos-v4/airplane-child.jpg" alt="飛行機の窓際で子どもを抱っこする様子" width="1200" height="2133" loading="lazy" decoding="async"><span>空の旅、3人で</span></li>
+        <li class="band-photo"><img src="assets/photos/suginoi.jpg" alt="高台から街並みを見渡す屋外の湯" width="1920" height="910" loading="lazy" decoding="async"><span>高台から、街を一望</span></li>
+        <li class="band-photo"><img src="assets/photos/indigo-inuyama.jpg" alt="大きな窓の向こうに緑の丘が見えるロビー" width="1080" height="720" loading="lazy" decoding="async"><span>大きな窓の向こうに緑</span></li>
+      </ul>
+    </section>
+
+    <div class="divider divider--stitch" aria-hidden="true"></div>
 
     <!-- INTRO -->
     <section class="intro section" id="intro">
-      <p class="label intro__label"><i></i>About Tius</p>
-      <div class="echo" aria-label="Travel Freely, Live Fully.">
-        <p class="echo__line" aria-hidden="true">Travel Freely,<br>Live Fully.</p>
-        <p class="echo__line echo__line--ghost" aria-hidden="true">Travel Freely,<br>Live Fully.</p>
-        <p class="echo__line echo__line--ghost" aria-hidden="true">Travel Freely,<br>Live Fully.</p>
-        <p class="echo__line echo__line--ghost" aria-hidden="true">Travel Freely,<br>Live Fully.</p>
-        <p class="echo__line echo__line--ghost" aria-hidden="true">Travel Freely,<br>Live Fully.</p>
+      <div class="head head--center">
+        <p class="head__sticker">ティウスについて</p>
       </div>
       <div class="intro__body">
         <p class="intro__lead" data-split>株式会社ティウスは、<br><em>Instagram・SNS・<br>コミュニティ・教育</em>を活用し、<br>旅の魅力と人の可能性を<br>広げる事業を行っています。</p>
@@ -162,23 +159,17 @@
           <p data-reveal>読者の方、メンバーの方、そしてお取引先さま。<br>私たちは一人ひとりとのつながりを大切にし、届けた先で「やってよかった」と思っていただける仕事を積み重ねていきます。</p>
           <a class="btn" href="#service" data-reveal><span>Service</span><i class="btn__arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></i></a>
         </div>
-        <figure class="intro__photo"><img src="assets/photos/indigo-inuyama.jpg" alt="大きな窓の向こうに緑の山と城が見えるホテルのロビー" width="1080" height="720" loading="lazy" decoding="async"></figure>
-      </div>
-      <div class="ticker" aria-hidden="true">
-        <div class="ticker__track">
-          <span>Instagram PR</span><i></i><span class="is-outline">Travel Community</span><i></i><span>School &amp; Course</span><i></i><span class="is-outline">Media &amp; Books</span><i></i><span>AI Advisory</span><i></i><span class="is-outline">SNS Support</span><i></i>
-          <span>Instagram PR</span><i></i><span class="is-outline">Travel Community</span><i></i><span>School &amp; Course</span><i></i><span class="is-outline">Media &amp; Books</span><i></i><span>AI Advisory</span><i></i><span class="is-outline">SNS Support</span><i></i>
-        </div>
+        <figure class="intro__photo"><img src="assets/photos-v4/airplane-child.jpg" alt="飛行機の窓際で子どもを抱っこする様子" width="1200" height="2133" loading="lazy" decoding="async"><figcaption>空の旅、3人で</figcaption></figure>
       </div>
     </section>
 
+    <div class="divider divider--wave" aria-hidden="true"><svg viewBox="0 0 1200 24" preserveAspectRatio="none"><path d="M0 12C50 2 100 2 150 12s100 10 150 0 100-10 150 0 100 10 150 0 100-10 150 0 100 10 150 0 100-10 150 0 100 10 150 0"/></svg></div>
+
     <!-- VISION -->
-    <section class="vision section" id="vision">
-      <p class="bigword" aria-hidden="true">Vision</p>
+    <section class="vision section is-tint" id="vision">
       <div class="head">
-        <span class="head__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-        <h2 class="head__en">Our Vision</h2>
-        <p class="head__ja">私たちの想い</p>
+        <p class="head__sticker">大切にしていること</p>
+        <h2 class="head__ja">私たちの想い</h2>
       </div>
       <div class="vision__grid">
         <div class="vision__main">
@@ -193,15 +184,15 @@
           <span class="vision__progress" aria-hidden="true"><i></i></span>
           <svg class="vision__quote" viewBox="0 0 60 44" aria-hidden="true"><path d="M5 43V28C5 15 11 6 24 2l2.5 6.5C20 11 17 15.5 17 21h10v22zM34 43V28c0-13 6-22 19-26l2.5 6.5C49 11 46 15.5 46 21h10v22z"/></svg>
           <div class="story__item">
-            <h4 class="story__head"><b>01</b>理想の未来<small aria-hidden="true">Future</small></h4>
+            <h4 class="story__head">理想の未来</h4>
             <p>好きなときに、好きな場所で、好きな人と、好きなことをする。旅も仕事も自分らしく選べる毎日こそ、私たちが広げていきたい生き方です。</p>
           </div>
           <div class="story__item">
-            <h4 class="story__head"><b>02</b>現在の状態<small aria-hidden="true">Reality</small></h4>
+            <h4 class="story__head">現在の状態</h4>
             <p>情報が多すぎて、何から始めればいいか分からない。「旅は高い」「時間がない」と思い込んで、やりたいことを後回しにしていませんか。</p>
           </div>
           <div class="story__item">
-            <h4 class="story__head"><b>03</b>私たちにお任せください<small aria-hidden="true">Our Answer</small></h4>
+            <h4 class="story__head">私たちにお任せください</h4>
             <p><strong>ティウスは、発信とコミュニティと学びの場で、その一歩目を支えます。</strong>知る、仲間と出会う、学ぶ。始めるための場所を、ひとつながりで用意しています。</p>
           </div>
         </div>
@@ -209,12 +200,12 @@
 
       <div class="cycle">
         <div class="cycle__lead">
-          <p class="cycle__kicker" aria-hidden="true">Self Check</p>
+          <p class="head__sticker cycle__kicker">セルフチェック</p>
           <p class="cycle__ask">あなたが<wbr>旅と<wbr>発信で<wbr>叶えたいことに、<wbr>いちばん<em>足りない</em>のは？</p>
           <p class="cycle__sub">好きなことを<wbr>仕事にする<wbr>毎日に<wbr>欠かせない、<wbr>4つの<wbr>要素。<br class="pc-only">いま<wbr>足りていない<wbr>ものが<wbr>分かれば、<wbr>次に<wbr>頼るべき<wbr>場所も<wbr>見えてきます。</p>
         </div>
         <div class="cycle__side">
-          <p class="cycle__label"><small aria-hidden="true">Ideal State</small>旅と発信で叶えたい理想の状態</p>
+          <p class="cycle__label">旅と発信で叶えたい理想の状態</p>
           <div class="cycle__dial" aria-hidden="true">
             <svg viewBox="0 0 320 320">
               <circle class="cycle__track" cx="160" cy="160" r="132"/>
@@ -231,25 +222,25 @@
         </div>
         <ol class="cycle__steps">
           <li>
-            <span class="cycle__no">01</span><span class="cycle__art cycle__art--trip" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="art-route" d="M8 50C16 30 34 44 40 26"/><g class="art-pin"><path d="M48 30s-8-7-8-13.5a8 8 0 0 1 16 0C56 23 48 30 48 30z"/><circle cx="48" cy="16.5" r="3"/></g><g class="art-plane"><path d="M4 50l9-4.5-2-3 2-1 4 2.5 6-3 1.5 1.5-5 4.5 1 4-1.5 1-2.5-3-6 3.5z"/></g><g class="art-coin"><circle cx="16" cy="18" r="6.5"/><path d="M16 14.8v6.4M14 16.4h4"/></g></svg></span>
+            <span class="cycle__art cycle__art--trip" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="art-route" d="M8 50C16 30 34 44 40 26"/><g class="art-pin"><path d="M48 30s-8-7-8-13.5a8 8 0 0 1 16 0C56 23 48 30 48 30z"/><circle cx="48" cy="16.5" r="3"/></g><g class="art-plane"><path d="M4 50l9-4.5-2-3 2-1 4 2.5 6-3 1.5 1.5-5 4.5 1 4-1.5 1-2.5-3-6 3.5z"/></g><g class="art-coin"><circle cx="16" cy="18" r="6.5"/><path d="M16 14.8v6.4M14 16.4h4"/></g></svg></span>
             <b>旅をお得に楽しむ方法</b>
             <small>旅は<wbr>高いと<wbr>あきらめず、<wbr>賢く<wbr>お得に<wbr>旅を<wbr>楽しむ<wbr>方法を<wbr>知っていきたい。</small>
             <span class="cycle__svcs"><em>おすすめ</em><a class="stage-svc stage-svc--community" href="#svc-community" data-offset="110"><span class="stage-svc__ic"><svg aria-hidden="true"><use href="#i-plane"/></svg></span><span class="stage-svc__txt"><b>MIRAIRO</b><small>旅行マイル特化コミュニティ</small></span></a><a class="stage-svc stage-svc--pr" href="#svc-pr" data-offset="110"><span class="stage-svc__ic"><svg aria-hidden="true"><use href="#i-instagram"/></svg></span><span class="stage-svc__txt"><b>ぴち家の発信</b></span></a></span>
           </li>
           <li>
-            <span class="cycle__no">02</span><span class="cycle__art cycle__art--step" aria-hidden="true"><svg viewBox="0 0 64 64"><g class="art-stairs"><rect x="6" y="46" width="16" height="10" rx="2"/><rect x="24" y="36" width="16" height="20" rx="2"/><rect x="42" y="24" width="16" height="32" rx="2"/></g><g class="art-walker"><circle cx="14" cy="34" r="4.5"/><path d="M8.5 46c0-4.5 2.5-7 5.5-7s5.5 2.5 5.5 7z"/></g><path class="art-flag" d="M50 24V8l9 4-9 4"/></svg></span>
+            <span class="cycle__art cycle__art--step" aria-hidden="true"><svg viewBox="0 0 64 64"><g class="art-stairs"><rect x="6" y="46" width="16" height="10" rx="2"/><rect x="24" y="36" width="16" height="20" rx="2"/><rect x="42" y="24" width="16" height="32" rx="2"/></g><g class="art-walker"><circle cx="14" cy="34" r="4.5"/><path d="M8.5 46c0-4.5 2.5-7 5.5-7s5.5 2.5 5.5 7z"/></g><path class="art-flag" d="M50 24V8l9 4-9 4"/></svg></span>
             <b>好きを仕事にする一歩</b>
             <small>好きなことや<wbr>経験を<wbr>形にして、<wbr>収入に<wbr>つなげる<wbr>最初の<wbr>一歩を<wbr>踏み出したい。</small>
             <span class="cycle__svcs"><em>おすすめ</em><a class="stage-svc stage-svc--school" href="#svc-school" data-offset="110"><span class="stage-svc__ic"><svg aria-hidden="true"><use href="#i-school"/></svg></span><span class="stage-svc__txt"><b>TraveLife</b><small>Instagram運用・収益化のスクール</small></span></a><a class="stage-svc stage-svc--school" href="#svc-school" data-offset="110"><span class="stage-svc__ic"><svg aria-hidden="true"><use href="#i-book"/></svg></span><span class="stage-svc__txt"><b>講座</b></span></a></span>
           </li>
           <li>
-            <span class="cycle__no">03</span><span class="cycle__art cycle__art--grow" aria-hidden="true"><svg viewBox="0 0 64 64"><g class="art-bars"><rect x="10" y="42" width="10" height="12" rx="2"/><rect x="27" y="33" width="10" height="21" rx="2"/><rect x="44" y="23" width="10" height="31" rx="2"/></g><path class="art-trend" d="M8 34l15-10 10 5 19-15"/><path class="art-arrowhead" d="M44 13h9v9"/></svg></span>
+            <span class="cycle__art cycle__art--grow" aria-hidden="true"><svg viewBox="0 0 64 64"><g class="art-bars"><rect x="10" y="42" width="10" height="12" rx="2"/><rect x="27" y="33" width="10" height="21" rx="2"/><rect x="44" y="23" width="10" height="31" rx="2"/></g><path class="art-trend" d="M8 34l15-10 10 5 19-15"/><path class="art-arrowhead" d="M44 13h9v9"/></svg></span>
             <b>発信を伸ばす仕組み</b>
             <small>思いつきで<wbr>終わらせず、<wbr>続けるほど<wbr>伸びていく<wbr>発信の<wbr>仕組みを<wbr>整えたい。</small>
             <span class="cycle__svcs"><em>おすすめ</em><a class="stage-svc stage-svc--ai" href="#svc-ai" data-offset="110"><span class="stage-svc__ic"><svg aria-hidden="true"><use href="#i-spark"/></svg></span><span class="stage-svc__txt"><b>AI顧問</b><small>業務の切り分け・指示・検品の型</small></span></a><a class="stage-svc stage-svc--sns" href="#svc-sns" data-offset="110"><span class="stage-svc__ic"><svg aria-hidden="true"><use href="#i-chart"/></svg></span><span class="stage-svc__txt"><b>SNS支援</b></span></a></span>
           </li>
           <li>
-            <span class="cycle__no">04</span><span class="cycle__art cycle__art--team" aria-hidden="true"><svg viewBox="0 0 64 64"><g class="art-person art-person--2"><circle cx="15" cy="29" r="6"/><path d="M4 52c0-7 5-11.5 11-11.5S26 45 26 52z"/></g><g class="art-person art-person--3"><circle cx="49" cy="29" r="6"/><path d="M38 52c0-7 5-11.5 11-11.5S60 45 60 52z"/></g><g class="art-person art-person--1"><circle cx="32" cy="23" r="7.5"/><path d="M18 52c0-9 6.5-14.5 14-14.5S46 43 46 52z"/></g><path class="art-link" d="M21 22c3-5 7-7 11-7s8 2 11 7"/></svg></span>
+            <span class="cycle__art cycle__art--team" aria-hidden="true"><svg viewBox="0 0 64 64"><g class="art-person art-person--2"><circle cx="15" cy="29" r="6"/><path d="M4 52c0-7 5-11.5 11-11.5S26 45 26 52z"/></g><g class="art-person art-person--3"><circle cx="49" cy="29" r="6"/><path d="M38 52c0-7 5-11.5 11-11.5S60 45 60 52z"/></g><g class="art-person art-person--1"><circle cx="32" cy="23" r="7.5"/><path d="M18 52c0-9 6.5-14.5 14-14.5S46 43 46 52z"/></g><path class="art-link" d="M21 22c3-5 7-7 11-7s8 2 11 7"/></svg></span>
             <b>仲間と続ける環境</b>
             <small>ひとりで<wbr>抱え込まず、<wbr>同じ<wbr>目標を<wbr>持つ<wbr>仲間と<wbr>励まし合いながら<wbr>続けていきたい。</small>
             <span class="cycle__svcs"><em>おすすめ</em><a class="stage-svc stage-svc--community" href="#svc-community" data-offset="110"><span class="stage-svc__ic"><svg aria-hidden="true"><use href="#i-plane"/></svg></span><span class="stage-svc__txt"><b>MIRAIRO</b></span></a><a class="stage-svc stage-svc--community" href="#svc-community" data-offset="110"><span class="stage-svc__ic"><svg aria-hidden="true"><use href="#i-users"/></svg></span><span class="stage-svc__txt"><b>コミュニティ</b></span></a></span>
@@ -265,20 +256,19 @@
       </div>
     </section>
 
+    <div class="divider divider--stitch" aria-hidden="true"></div>
+
     <!-- SERVICE -->
     <section class="service" id="service">
-      <div class="panel panel--dark">
-        <p class="bigword bigword--light" aria-hidden="true">Service</p>
-        <div class="head head--light">
-          <span class="head__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <h2 class="head__en">Service</h2>
-          <p class="head__ja">事業内容</p>
+      <div class="panel">
+        <div class="head">
+          <p class="head__sticker">できること</p>
+          <h2 class="head__ja">事業内容</h2>
         </div>
 
         <article class="feature" id="svc-pr">
           <figure class="feature__photo"><img src="assets/photos/ginzan-so.jpg" alt="紅葉の林に面した木造屋根の露天風呂" width="1398" height="931" loading="lazy" decoding="async"></figure>
           <div class="feature__intro">
-            <p class="feature__no">01</p>
             <h3 class="feature__title" data-split>Instagram発信・PR<br>（ぴち家）</h3>
             <p class="feature__text" data-reveal>旅行系Instagram「ぴち家」（フォロワー約41.9万人）で、タイアップ投稿・リール・ストーリーズを通じて、施設や地域、サービスの魅力をお届けします。見た人との接点から、来訪・予約、その後のファン化までを一つの流れとして設計します。</p>
             <ol class="chain" aria-label="発信で設計する流れ">
@@ -287,23 +277,6 @@
               <li><span>来訪・<wbr>予約</span></li>
               <li><span>ファン化</span></li>
             </ol>
-            <!-- A reel plays on a phone, gets a like and a save, then the booking card slides up -->
-            <div class="phone" aria-hidden="true">
-              <div class="phone__body">
-                <div class="phone__top"><i class="phone__avatar"></i><b></b><span class="phone__dot"></span></div>
-                <div class="phone__reel">
-                  <i class="phone__footage"></i>
-                  <span class="phone__bar"><i></i></span>
-                  <span class="phone__side"><i class="phone__like"></i><i></i><i></i></span>
-                  <span class="phone__caption"><i></i><i></i></span>
-                </div>
-                <div class="phone__card"><em></em><span><i></i><i></i></span><b></b></div>
-                <div class="phone__stories"><i></i><i></i><i></i><i></i></div>
-              </div>
-              <span class="phone__chip phone__chip--1"><svg aria-hidden="true"><use href="#i-post"/></svg>タイアップ投稿</span>
-              <span class="phone__chip phone__chip--2"><svg aria-hidden="true"><use href="#i-video"/></svg>リール</span>
-              <span class="phone__chip phone__chip--3"><svg aria-hidden="true"><use href="#i-story"/></svg>ストーリーズ</span>
-            </div>
           </div>
           <div class="feature__list">
             <p class="feature__list-title">主な支援内容</p>
@@ -323,75 +296,31 @@
 
         <div class="services">
           <article class="svc svc--community" id="svc-community">
-            <!-- Community: members join one by one round the centre, a plane flies the route between them -->
-            <div class="svc__visual" aria-hidden="true">
-              <div class="svc__stage"><div class="cmn">
-                <svg class="cmn__web" viewBox="0 0 300 152"><path class="cmn__route" d="M40 118C80 30 220 30 260 118"/><g class="cmn__links"><path d="M150 76L86 46"/><path d="M150 76L214 46"/><path d="M150 76L70 104"/><path d="M150 76L230 104"/><path d="M150 76L150 128"/></g></svg>
-                <span class="cmn__hub"><svg viewBox="0 0 24 24"><use href="#i-users"/></svg></span>
-                <i class="cmn__m cmn__m--1"></i><i class="cmn__m cmn__m--2"></i><i class="cmn__m cmn__m--3"></i><i class="cmn__m cmn__m--4"></i><i class="cmn__m cmn__m--5"></i>
-                <span class="cmn__plane"><svg viewBox="0 0 24 24"><use href="#i-plane"/></svg></span>
-                <span class="cmn__bubble"><i></i><i></i></span>
-              </div></div>
-            </div>
-            <div class="svc__top"><span class="svc__no">02</span></div>
+            <figure class="svc__photo"><img src="assets/photos-v6/community-event.jpg" alt="大人数が集まるコミュニティのオフ会の様子" width="1186" height="512" loading="lazy" decoding="async"></figure>
             <h3>コミュニティ運営<br>（MIRAIRO）</h3>
             <p class="svc__tags"><span>会員約2,000人</span><span>継続率97%</span></p>
             <p>旅行マイルに特化した会員コミュニティ「MIRAIRO」を運営しています。旅をお得に楽しむための知識と、同じ目標を持つ仲間と続けられる場をお届けします。</p>
           </article>
           <article class="svc svc--school" id="svc-school">
-            <!-- School: a lesson plays, the curriculum ticks off line by line and the progress bar fills -->
-            <div class="svc__visual" aria-hidden="true">
-              <div class="svc__stage"><div class="sch">
-                <div class="sch__screen"><i class="sch__slide"></i><span class="sch__play"><svg viewBox="0 0 24 24"><path d="M8.5 5.8v12.4l10-6.2z"/></svg></span><span class="sch__bar"><i></i></span></div>
-                <ul class="sch__list"><li><b></b><i></i></li><li><b></b><i></i></li><li><b></b><i></i></li><li><b></b><i></i></li></ul>
-                <span class="sch__cap"><svg viewBox="0 0 24 24"><use href="#i-school"/></svg></span>
-              </div></div>
-            </div>
-            <div class="svc__top"><span class="svc__no">03</span></div>
+            <figure class="svc__photo"><img src="assets/photos-v6/seminar.jpg" alt="セミナー会場で学ぶ受講生たち" width="1179" height="960" loading="lazy" decoding="async"></figure>
             <h3>教育・スクール<br>（TraveLife／講座支援）</h3>
             <p class="svc__tags"><span>Instagram運用</span><span>収益化</span><span>講座運営の支援</span></p>
             <p>Instagram運用と収益化を学ぶスクール「TraveLife」を運営しています。あわせて、講座を開く方に向けた運営の支援も行います。</p>
           </article>
           <article class="svc svc--media" id="svc-media">
-            <!-- Media: two account cards rise, their follower bars grow, then a book opens -->
-            <div class="svc__visual" aria-hidden="true">
-              <div class="svc__stage"><div class="mda">
-                <span class="mda__card mda__card--1"><i class="mda__avatar"></i><b></b><i class="mda__grow"></i><em></em></span>
-                <span class="mda__card mda__card--2"><i class="mda__avatar"></i><b></b><i class="mda__grow"></i><em></em></span>
-                <span class="mda__book"><i class="mda__cover"></i><i class="mda__page"></i><i class="mda__page mda__page--2"></i></span>
-              </div></div>
-            </div>
-            <div class="svc__top"><span class="svc__no">04</span></div>
+            <figure class="svc__photo"><img src="assets/photos-v6/nomad-work.jpg" alt="旅先でパソコンを開いて仕事をする様子" width="1179" height="970" loading="lazy" decoding="async"></figure>
             <h3>メディア運営<br>（お金・ノマド）</h3>
             <p class="svc__tags"><span>@yuki_moneylife 約11.4万人</span><span>@yuki__nomadlife 約2.4万人</span><span>著書出版</span></p>
             <p>お金のInstagram「@yuki_moneylife」とノマドのInstagram「@yuki__nomadlife」を運営し、著書の出版も行っています。暮らしと働き方にまつわる情報を、分かりやすく届けます。</p>
           </article>
           <article class="svc svc--ai" id="svc-ai">
-            <!-- AI advisory: a task comes in, it is split into three, then each part is checked off -->
-            <div class="svc__visual" aria-hidden="true">
-              <div class="svc__stage"><div class="ai">
-                <span class="ai__ask"><i></i><i></i></span>
-                <span class="ai__reply">
-                  <span class="ai__avatar"><svg viewBox="0 0 24 24"><use href="#i-spark"/></svg></span>
-                  <span class="ai__bubble"><span class="ai__typing"><i></i><i></i><i></i></span><span class="ai__lines"><i></i><i></i><i></i></span></span>
-                </span>
-                <span class="ai__checks"><i></i><i></i><i></i></span>
-              </div></div>
-            </div>
-            <div class="svc__top"><span class="svc__no">05</span></div>
+            <figure class="svc__photo"><img src="assets/photos-v6/ai-work.jpg" alt="テーブルでパソコンを前に話し合う様子" width="1080" height="271" loading="lazy" decoding="async"></figure>
             <h3>AI顧問・<br>コンサルティング</h3>
             <p class="svc__tags"><span>業務の切り分け</span><span>指示</span><span>検品</span></p>
             <p>発信者・講座運営者の方に向けて、AIに任せる業務の切り分け、指示の出し方、仕上がりの検品まで、使いこなすための型を伴走しながらお伝えします。</p>
           </article>
           <article class="svc svc--sns" id="svc-sns">
-            <!-- SNS support: posts drop into the content calendar, then the reach line climbs -->
-            <div class="svc__visual" aria-hidden="true">
-              <div class="svc__stage"><div class="cal">
-                <div class="cal__grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-                <div class="cal__chart"><svg viewBox="0 0 100 60"><path class="cal__area" d="M4 56L22 44 40 48 58 30 76 34 96 10V56z"/><path class="cal__line" d="M4 56L22 44 40 48 58 30 76 34 96 10"/><circle class="cal__dot" cx="96" cy="10" r="3.5"/></svg></div>
-              </div></div>
-            </div>
-            <div class="svc__top"><span class="svc__no">06</span></div>
+            <figure class="svc__photo"><img src="assets/photos-v4/shooting-together.jpg" alt="スマートフォンで景色を撮影する二人" width="1200" height="2133" loading="lazy" decoding="async" style="object-position: 50% 72%"></figure>
             <h3>SNS運用・<br>発信支援</h3>
             <p class="svc__tags"><span>企画</span><span>運用支援</span></p>
             <p>企業や個人の方のSNS発信を、企画から日々の運用まで支援します。自分たちの発信で積み重ねてきたやり方をもとに、続けられる形を一緒に考えます。</p>
@@ -400,29 +329,27 @@
       </div>
     </section>
 
+    <div class="divider divider--wave" aria-hidden="true"><svg viewBox="0 0 1200 24" preserveAspectRatio="none"><path d="M0 12C50 2 100 2 150 12s100 10 150 0 100-10 150 0 100 10 150 0 100-10 150 0 100 10 150 0 100-10 150 0 100 10 150 0"/></svg></div>
+
     <!-- STRENGTH -->
-    <section class="strength section" id="strength">
+    <section class="strength section is-tint" id="strength">
       <div class="strength__grid">
         <div class="strength__side">
           <div class="head">
-            <span class="head__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-            <h2 class="head__en">Strength</h2>
-            <p class="head__ja">私たちの強み</p>
+            <p class="head__sticker">ティウスらしさ</p>
+            <h2 class="head__ja">私たちの強み</h2>
           </div>
         </div>
         <ol class="strength__list">
           <li class="strength__item glass">
-            <span class="strength__no">01</span>
             <h3>自分たちで運営し、<br>実証している</h3>
             <p>Instagramでの発信も、会員コミュニティも、私たち自身が運営しています。机上の提案ではなく、自社で動かしている実物をもとに考えます。</p>
           </li>
           <li class="strength__item glass">
-            <span class="strength__no">02</span>
             <h3>発信から、<br>その先の行動まで</h3>
             <p>投稿を見てもらうだけで終わらせず、一覧を見る、申し込む、予約するといった次の行動までの導線を設計します。</p>
           </li>
           <li class="strength__item glass">
-            <span class="strength__no">03</span>
             <h3>公開後の<br>成果報告・改善まで</h3>
             <p>公開して終わりではなく、反応を数字でまとめたレポートをお届けし、次に活かせるご提案までお返しします。</p>
           </li>
@@ -430,14 +357,15 @@
       </div>
     </section>
 
+    <div class="divider divider--stitch" aria-hidden="true"></div>
+
     <!-- WORKS: the six industries orbit the follower total -->
     <section class="works" id="works">
       <div class="works__inner">
         <div class="works__intro">
           <div class="head">
-            <span class="head__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-            <h2 class="head__en">Works</h2>
-            <p class="head__ja">実績・対応業種</p>
+            <p class="head__sticker">お手伝いしてきた分野</p>
+            <h2 class="head__ja">実績・対応業種</h2>
           </div>
           <p class="works__label">4アカウント合計フォロワー</p>
           <p class="works__count"><small class="works__pre">約</small><span data-count="56">56</span><small>万人</small></p>
@@ -468,13 +396,14 @@
       </div>
     </section>
 
+    <div class="divider divider--wave" aria-hidden="true"><svg viewBox="0 0 1200 24" preserveAspectRatio="none"><path d="M0 12C50 2 100 2 150 12s100 10 150 0 100-10 150 0 100 10 150 0 100-10 150 0 100 10 150 0 100-10 150 0 100 10 150 0"/></svg></div>
+
     <!-- CLIENTS: a row of text cards that drifts sideways (drag, swipe or arrows) -->
-    <section class="clients" id="clients">
+    <section class="clients is-tint" id="clients">
       <div class="clients__head">
         <div class="head">
-          <span class="head__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <h2 class="head__en">Clients</h2>
-          <p class="head__ja">支援企業・お取引先さま</p>
+          <p class="head__sticker">ご一緒した企業さま</p>
+          <h2 class="head__ja">支援企業・お取引先さま</h2>
         </div>
         <p class="clients__text">旅行・ホテルから<wbr>旅の<wbr>アイテムまで、<br class="sp-only">さまざまな<wbr>企業さまと<wbr>お取引<wbr>いただいています。</p>
       </div>
@@ -543,12 +472,13 @@
       </ul>
     </section>
 
+    <div class="divider divider--stitch" aria-hidden="true"></div>
+
     <!-- FLOW -->
     <section class="flow section" id="flow">
       <div class="head">
-        <span class="head__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-        <h2 class="head__en">Flow</h2>
-        <p class="head__ja">ご支援の流れ</p>
+        <p class="head__sticker">進め方</p>
+        <h2 class="head__ja">ご支援の流れ</h2>
       </div>
       <div class="flow__track">
         <div class="flow__line" aria-hidden="true"><i></i></div>
@@ -562,13 +492,14 @@
       </div>
     </section>
 
+    <div class="divider divider--wave" aria-hidden="true"><svg viewBox="0 0 1200 24" preserveAspectRatio="none"><path d="M0 12C50 2 100 2 150 12s100 10 150 0 100-10 150 0 100 10 150 0 100-10 150 0 100 10 150 0 100-10 150 0 100 10 150 0"/></svg></div>
+
     <!-- ARTICLES: the three media we publish on, plus the note link -->
-    <section class="articles section" id="articles">
+    <section class="articles section is-tint" id="articles">
       <div class="articles__head">
         <div class="head">
-          <span class="head__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <h2 class="head__en">Articles</h2>
-          <p class="head__ja">記事・発信</p>
+          <p class="head__sticker">旅の発信</p>
+          <h2 class="head__ja">記事・発信</h2>
         </div>
         <a class="btn" href="https://note.com/" target="_blank" rel="noopener"><span>noteで記事をもっと見る</span><i class="btn__arrow"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></i></a>
       </div>
@@ -587,12 +518,14 @@
         </li>
         <li class="article">
           <a href="https://www.instagram.com/yuki_moneylife/" target="_blank" rel="noopener">
-            <figure class="article__thumb article__thumb--photo"><img src="assets/photos/ritz-nikko.jpg" alt="紅葉の山と湖のほとりに建つホテル" width="4000" height="2998" loading="lazy" decoding="async"><figcaption>@yuki_moneylife</figcaption></figure>
+            <figure class="article__thumb article__thumb--photo"><img src="assets/photos-v6/book.jpg" alt="著書『お金が増える家族はどっちを選ぶ!?』" width="980" height="1195" loading="lazy" decoding="async"><figcaption>@yuki_moneylife</figcaption></figure>
             <div class="article__body"><span class="article__tag">Instagram</span><h3>お金</h3><p>家族のお金と投資の発信</p><span class="article__more">Instagramで見る ↗</span></div>
           </a>
         </li>
       </ul>
     </section>
+
+    <div class="divider divider--stitch" aria-hidden="true"></div>
 
     <!-- STATEMENT -->
     <section class="statement" aria-label="Let's make your life a journey.">
@@ -601,21 +534,21 @@
       <p class="statement__line statement__line--2" aria-hidden="true">life a journey.</p>
     </section>
 
+    <div class="divider divider--wave" aria-hidden="true"><svg viewBox="0 0 1200 24" preserveAspectRatio="none"><path d="M0 12C50 2 100 2 150 12s100 10 150 0 100-10 150 0 100 10 150 0 100-10 150 0 100 10 150 0 100-10 150 0 100 10 150 0"/></svg></div>
+
     <!-- COMPANY -->
     <section class="company" id="company">
-      <div class="panel panel--light">
+      <div class="panel panel--soft">
         <div class="company__grid">
           <div class="company__side">
             <div class="head">
-              <span class="head__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-              <h2 class="head__en">Company</h2>
-              <p class="head__ja">会社概要</p>
+              <p class="head__sticker">わたしたちのこと</p>
+              <h2 class="head__ja">会社概要</h2>
             </div>
             <p class="company__logo"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#logo-mark"/></svg><span>Tius<small>株式会社ティウス</small></span></p>
           </div>
           <dl class="company__table">
             <div class="company__row"><dt>会社名</dt><dd>株式会社ティウス</dd></div>
-            <div class="company__row"><dt>代表者</dt><dd>日戸 勇紀</dd></div>
             <div class="company__row"><dt>所在地</dt><dd>〒470-0346<br>愛知県豊田市乙部ケ丘1丁目16番地12</dd></div>
             <div class="company__row"><dt>法人番号</dt><dd>6180301035671<a class="company__link" href="https://www.houjin-bangou.nta.go.jp/henkorireki-johoto.html?selHouzinNo=6180301035671" target="_blank" rel="noopener">国税庁 法人番号公表サイトで確認<i>↗</i></a></dd></div>
             <div class="company__row"><dt>事業内容</dt><dd>Instagram発信・PR<br>コミュニティ運営<br>教育・スクール事業<br>メディア運営・出版<br>AI顧問・コンサルティング<br>SNS運用支援</dd></div>
@@ -624,14 +557,15 @@
       </div>
     </section>
 
+    <div class="divider divider--stitch" aria-hidden="true"></div>
+
     <!-- CONTACT -->
     <section class="contact section" id="contact">
       <div class="contact__card glass">
         <div class="contact__intro">
           <div class="head">
-            <span class="head__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-            <h2 class="head__en">Contact</h2>
-            <p class="head__ja">お問い合わせ</p>
+            <p class="head__sticker">お気軽にどうぞ</p>
+            <h2 class="head__ja">お問い合わせ</h2>
           </div>
           <h3 class="contact__title" data-split>あなたの事業にも、<br>旅と発信のワクワクを。</h3>
           <ul class="worries">
@@ -767,7 +701,6 @@
   <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
   <script src="js/scene.js"></script>
-  <script src="js/particles.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
